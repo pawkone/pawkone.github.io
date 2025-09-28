@@ -22,9 +22,9 @@
         width: 65%;
     }
     #build-list {
-        max-height: 400px;  /* or whatever height you like */
-        overflow-y: auto;   /* enables scroll inside container */
-        padding-right: 10px; /* keeps text away from scrollbar */
+        max-height: 400px; 
+        overflow-y: auto;
+        padding-right: 10px;
     }
     .controls {
       margin-bottom: 20px;
@@ -49,7 +49,6 @@
       font-size: 0.9em;
       color: #666;
     }
-    /* unreleased style */
     .link-item.unreleased a {
       pointer-events: none;
       color: #aaa;
@@ -79,8 +78,6 @@
 <body>
   <div class="container">
     <h1>Ruby Game : Demo - Builds</h1>
-    <p>NOTE: Webports are discontinued for now or forever since being too hard to setup.</p>
-    
     <div class="controls">
       <label for="sort">Sort by: </label>
       <select id="sort">
@@ -88,10 +85,8 @@
         <option value="numeric">Numeric (Lowest → Highest)</option>
       </select>
     </div>
-
     <div id="build-list"></div>
     <button id="loadMore">Load More</button>
-    
     <a href="https://kone.infy.uk">Go back to kone.infy.uk</a>
   </div>
 
@@ -111,13 +106,11 @@
       },
       {
         version: "build 3 - 06/09/2025",
-        number: 2,
+        number: 3,
         link: "/builds/rubygamedemo--build-3--26-09-25.zip",
-        description: "ruby game demo playtest build i guess (a early test version for build 4)"
+        description: "a early test build before the big release of build 4, a unfinished but beatable level (happyland), android support added but not compiled yet"
       }
     ];
-
-    // Fill unreleased up to 100
     const maxBuilds = 100;
     for (let i = 1; i <= maxBuilds; i++) {
       if (!builds.find(b => b.number === i)) {
@@ -129,29 +122,24 @@
         });
       }
     }
-
     let currentIndex = 0;
     const chunkSize = 10;
     const container = document.getElementById("build-list");
     const loadMoreBtn = document.getElementById("loadMore");
     const sortSelect = document.getElementById("sort");
-
     let sortedBuilds = [];
-
     function sortBuilds() {
       if (sortSelect.value === "numeric") {
         sortedBuilds = [...builds].sort((a, b) => a.number - b.number);
       } else {
-        // newest released first (highest released number on top)
         sortedBuilds = [...builds].sort((a, b) => {
-          if (a.link && !b.link) return -1; // released before unreleased
+          if (a.link && !b.link) return -1;
           if (!a.link && b.link) return 1;
-          return b.number - a.number; // higher numbers first
+          return b.number - a.number;
         });
       }
       resetAndRender();
     }
-
     function resetAndRender() {
       container.innerHTML = "";
       currentIndex = 0;
@@ -159,7 +147,6 @@
       loadMoreBtn.textContent = "Load More";
       loadBuilds();
     }
-
     function loadBuilds() {
       const nextIndex = Math.min(currentIndex + chunkSize, sortedBuilds.length);
       for (let i = currentIndex; i < nextIndex; i++) {
@@ -167,32 +154,25 @@
         const div = document.createElement("div");
         div.classList.add("link-item");
         if (!build.link) div.classList.add("unreleased");
-
         const a = document.createElement("a");
         a.href = build.link || "#";
         a.target = "_blank";
         a.textContent = build.version;
-
         const span = document.createElement("span");
         span.classList.add("link-description");
         span.textContent = build.description;
-
         div.appendChild(a);
         div.appendChild(span);
         container.appendChild(div);
       }
       currentIndex = nextIndex;
-
       if (currentIndex >= sortedBuilds.length) {
         loadMoreBtn.disabled = true;
         loadMoreBtn.textContent = "All builds loaded";
       }
     }
-
     loadMoreBtn.addEventListener("click", loadBuilds);
     sortSelect.addEventListener("change", sortBuilds);
-
-    // initial load
     sortBuilds();
   </script>
 </body>
