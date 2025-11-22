@@ -3,60 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pawkone 2010 vibes</title>
     <style>
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: Arial, sans-serif;
+            background: url("bg.png");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+            image-rendering: pixelated;
+            font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
             margin: 0;
+            padding: 0;
+        }
+        #wrapper {
+            width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border: 2px solid #000;
             padding: 20px;
         }
         h1 {
-            color: #ffffff;
             text-align: center;
+            color: #b7236d;
+            font-size: 36px;
+            margin-top: 0;
         }
         .subpages-box {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 20px;
-            max-width: 600px;
-            margin: 20px auto;
+            background: #ffd1ea;
+            border: 2px ridge #c14288;
+            padding: 15px;
+            margin-top: 30px;
+        }
+        .subpages-box h2 {
+            font-size: 24px;
+            color: #b7236d;
+            margin-top: 0;
         }
         .subpage-item {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            background: #ffffff;
+            border: 2px groove #999;
             padding: 10px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .subpage-item:hover {
-            background-color: #2a2a2a;
+            margin-bottom: 10px;
         }
         .subpage-item img {
             width: 128px;
             height: 128px;
-            border-radius: 8px;
             margin-right: 15px;
+            border: 2px solid #000;
+            image-rendering: pixelated;
         }
         .subpage-item a {
-            color: #1e90ff;
-            text-decoration: none;
-            font-size: 1.2em;
-        }
-        .subpage-item a:hover {
+            margin-left: 15px;
+            color: #b7236d;
+            font-size: 48px;
             text-decoration: underline;
+            font-weight: bold;
+        }
+        marquee {
+            font-size: 18px;
+            color: #ffff00;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>pawkone.github.io - select a page</h1>
-    <div class="subpages-box">
-        <h1>fun / entertainment</h1>
-        <div class="subpage-item">
-            <img src="img0.png" alt="TEST">
-            <a href="./fun/testm3u8">TEST M3U8</a>
+    <marquee behavior="scroll" direction="left">welcome to my page ig /:</marquee>
+    <div id="wrapper">
+        <h1>KoN - main page!!!1!11</h1>
+        <div class="subpages-box">
+            <h2>fun / random</h2>
+            <div class="subpage-item">
+                <img src="img0.png" alt="TEST">
+                <a href="./fun/testm3u8">TEST M3U8</a>
+            </div>
         </div>
     </div>
 </body>
