@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      html, body {
+        background: #000;
+        margin: 0;
+        min-height: 100svh;
+        min-width: 100vw;
+        place-items: center;
+      }
+      canvas {
+        display: block;
+        image-rendering: pixelated;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <script type="text/javascript">
+      var canvasElement = document.getElementById("canvas");
+      var startingHeight, startingWidth;
+      var startingAspect;
+      var Module = {
+        canvas: (function(){return canvasElement})(),
+        totalDependencies: 0,
+        monitorRunDependencies: function (left) {this.totalDependencies = Math.max(this.totalDependencies, left)},
+      };
+      var g_pWadLoadCallback = undefined
+      var g_pAddAsyncMethod = -1;
+      function setAddAsyncMethod(asyncMethod){g_pAddAsyncMethod = asyncMethod;}
+      function manifestFiles(){return ["runner.data","runner.js","runner.wasm","audio-worklet.js","game.unx","intro.mp4"].join(";");}
+      function manifestFilesMD5(){return ["8caf342a51b212038dd728d4d48b711d","8669aa66d44cfb4f13a098cd6b0296e1","d29ac123833b56dcfbe188f10e5ecb85","e8f1e8db8cf996f8715a6f2164c2e44e","4a04e7462cabc04f1d44b56ec473dae1","7e277e383273b8ea037c2a8fbc86a39a"];}
+      function onGameSetWindowSize(width,height)
+      {
+          startingHeight = height;
+          startingWidth = width;
+          startingAspect = startingWidth / startingHeight;
+      }
+      function ensureAspectRatio() {
+        if (startingHeight === undefined && startingWidth === undefined) {return;}
+        const maxWidth = window.innerWidth;
+        const maxHeight = window.innerHeight;
+        var newHeight, newWidth;
+        var heightQuotient = startingHeight / maxHeight;
+        var widthQuotient = startingWidth / maxWidth;
+        if (heightQuotient > widthQuotient) {
+          newHeight = maxHeight;
+          newWidth = newHeight * startingAspect;
+        } else {
+          newWidth = maxWidth;
+          newHeight = newWidth / startingAspect;
+        }
+        canvasElement.style.height = newHeight + "px";
+        canvasElement.style.width = newWidth + "px";
+      }
+      const resizeObserver = new ResizeObserver(() => {
+        window.requestAnimationFrame(ensureAspectRatio);
+        setTimeout(() => window.requestAnimationFrame(ensureAspectRatio), 100);
+      });
+      resizeObserver.observe(document.body);
+    </script>
+    <script async type="text/javascript" src="runner.js"></script>
+  </body>
+</html>
