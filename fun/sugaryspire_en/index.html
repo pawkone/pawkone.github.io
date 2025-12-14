@@ -1,3 +1,9 @@
+when no you brokeit fully again, how about trying to makethe og thing more accurate
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
@@ -35,45 +41,49 @@
       var canvasElement = document.getElementById("canvas");
       const loading = document.getElementById('loading');
       const canvas = canvasElement;
-      (() => {
-        const progressMap = new Map();
-        const upd = () => {
-          let loaded=0, total=0;
-          for (const v of progressMap.values()){ loaded+=v.loaded; total+=v.total; }
-          if (total>0){
-            loading.textContent = 'Loading ' + Math.max(0, Math.min(100, Math.floor(loaded/total*100))) + '%';
-          }
-        };
-        const oOpen = XMLHttpRequest.prototype.open;
-        const oSend = XMLHttpRequest.prototype.send;
-        XMLHttpRequest.prototype.open = function(method, url){
-          this._track = /(\.data$|runner\.data|\.wasm$)/.test(url);
-          return oOpen.apply(this, arguments);
-        };
-        XMLHttpRequest.prototype.send = function(body){
-          if (this._track){
-            progressMap.set(this, {loaded:0,total:0});
-            this.addEventListener('progress', e => {
-              const r = progressMap.get(this);
-              if (!r) return;
-              if (e.lengthComputable) r.total = e.total;
-              r.loaded = e.loaded || r.loaded;
-              upd();
-            });
-            this.addEventListener('load', () => {
-              const r = progressMap.get(this);
-              if (r){
-                if (!r.total && this.response && this.response.byteLength) r.total = this.response.byteLength;
-                r.loaded = r.total || r.loaded;
-              }
-              upd(); progressMap.delete(this);
-            });
-            this.addEventListener('error', ()=>progressMap.delete(this));
-            this.addEventListener('abort', ()=>progressMap.delete(this));
-          }
-          return oSend.apply(this, arguments);
-        };
-      })();
+(() => {
+  const progressMap = new Map();
+  const upd = () => {
+    let loaded = 0, total = 0;
+    for (const v of progressMap.values()) {
+      loaded += v.loaded;
+      total += v.total || 0;
+    }
+    if (total > 0) {
+      const pct = Math.floor((loaded / total) * 100);
+      loading.textContent = `Loading ${pct}% (${(loaded/1024/1024).toFixed(2)} MB / ${(total/1024/1024).toFixed(2)} MB)`;
+    }
+  };
+  const oOpen = XMLHttpRequest.prototype.open;
+  const oSend = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.open = function(method, url){
+    this._track = /(\.data$|runner\.data|\.wasm$)/.test(url);
+    return oOpen.apply(this, arguments);
+  };
+  XMLHttpRequest.prototype.send = function(body){
+    if (this._track){
+      progressMap.set(this, {loaded:0,total:0});
+      this.addEventListener('progress', e => {
+        const r = progressMap.get(this);
+        if (!r) return;
+        if (e.lengthComputable) r.total = e.total;
+        r.loaded = e.loaded || r.loaded;
+        upd();
+      });
+      this.addEventListener('load', () => {
+        const r = progressMap.get(this);
+        if (r){
+          if (!r.total && this.response && this.response.byteLength) r.total = this.response.byteLength;
+          r.loaded = r.total || r.loaded;
+        }
+        upd(); progressMap.delete(this);
+      });
+      this.addEventListener('error', ()=>progressMap.delete(this));
+      this.addEventListener('abort', ()=>progressMap.delete(this));
+    }
+    return oSend.apply(this, arguments);
+  };
+})();
       var Module = {
         canvas: canvas,
         preRun: [],
@@ -113,6 +123,12 @@
       function manifestFiles()
       {return ["runner.data","runner.js","runner.wasm","audio-worklet.js","game.unx"].join( ";");}
     </script>
-    <script async type="text/javascript" src="runner.js"></script>
+<script>
+  const bust = Date.now();
+  const s = document.createElement('script');
+  s.src = 'runner.js?v=' + bust;
+  s.async = true;
+  document.body.appendChild(s);
+</script>
   </body>
 </html>
