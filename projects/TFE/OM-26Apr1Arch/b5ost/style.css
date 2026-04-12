@@ -1,0 +1,28 @@
+body {
+    font-family: Arial;
+}
+
+.container {
+    max-width: 600px;
+    margin: 64px;
+}
+
+.box {
+    background: #dcd6ff;
+    padding: 16px;
+}
+
+.track {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.track:first-child {
+    margin-top: 0;
+}
+
+.track h3 {
+    margin: 0;
+}
